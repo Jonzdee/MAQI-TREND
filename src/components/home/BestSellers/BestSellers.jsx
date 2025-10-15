@@ -16,7 +16,7 @@ const BestSellers = () => {
         <Product
           _id="1011"
           img={bestSellerOne}
-          productName="Flower Base"
+          productName="Jeans"
           price="35.00"
           color="Blank and White"
           badge={true}
@@ -34,7 +34,7 @@ const BestSellers = () => {
         <Product
           _id="1013"
           img={bestSellerThree}
-          productName="Household materials"
+          productName="Jeans"
           price="25.00"
           color="Mixed"
           badge={true}
@@ -43,7 +43,7 @@ const BestSellers = () => {
         <Product
           _id="1014"
           img={bestSellerFour}
-          productName="Travel Bag"
+          productName="Jeans"
           price="220.00"
           color="Black"
           badge={false}

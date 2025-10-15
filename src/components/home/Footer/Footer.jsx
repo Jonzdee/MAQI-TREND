@@ -38,38 +38,22 @@ const Footer = () => {
               ab ullam, numquam nesciunt in.
             </p>
             <ul className="flex items-center gap-2">
-              <a
-                href="/"
-                target="_blank"
-                rel="noreferrer"
-              >
+              <a href="/" target="_blank" rel="noreferrer">
                 <li className="w-7 h-7 bg-primeColor text-gray-100 hover:text-white cursor-pointer text-lg rounded-full flex justify-center items-center hover:bg-black duration-300">
                   <FaYoutube />
                 </li>
               </a>
-              <a
-                href="/"
-                target="_blank"
-                rel="noreferrer"
-              >
+              <a href="/" target="_blank" rel="noreferrer">
                 <li className="w-7 h-7 bg-primeColor text-gray-100 hover:text-white cursor-pointer text-lg rounded-full flex justify-center items-center hover:bg-black duration-300">
                   <FaGithub />
                 </li>
               </a>
-              <a
-                href="/"
-                target="_blank"
-                rel="noreferrer"
-              >
+              <a href="/" target="_blank" rel="noreferrer">
                 <li className="w-7 h-7 bg-primeColor text-gray-100 hover:text-white cursor-pointer text-lg rounded-full flex justify-center items-center hover:bg-black duration-300">
                   <FaFacebook />
                 </li>
               </a>
-              <a
-                href="/"
-                target="_blank"
-                rel="noreferrer"
-              >
+              <a href="/" target="_blank" rel="noreferrer">
                 <li className="w-7 h-7 bg-primeColor text-gray-100 hover:text-white cursor-pointer text-lg rounded-full flex justify-center items-center hover:bg-black duration-300">
                   <FaLinkedin />
                 </li>
@@ -81,16 +65,16 @@ const Footer = () => {
           <FooterListTitle title="Shop" />
           <ul className="flex flex-col gap-2">
             <li className="font-titleFont text-base text-lightText hover:text-black hover:underline decoration-[1px] decoration-gray-500 underline-offset-2 cursor-pointer duration-300">
-              Accesories
+              Jeans
             </li>
             <li className="font-titleFont text-base text-lightText hover:text-black hover:underline decoration-[1px] decoration-gray-500 underline-offset-2 cursor-pointer duration-300">
               Clothes
             </li>
             <li className="font-titleFont text-base text-lightText hover:text-black hover:underline decoration-[1px] decoration-gray-500 underline-offset-2 cursor-pointer duration-300">
-              Electronics
+              Jeans
             </li>
             <li className="font-titleFont text-base text-lightText hover:text-black hover:underline decoration-[1px] decoration-gray-500 underline-offset-2 cursor-pointer duration-300">
-              Home appliances
+              Jeans
             </li>
             <li className="font-titleFont text-base text-lightText hover:text-black hover:underline decoration-[1px] decoration-gray-500 underline-offset-2 cursor-pointer duration-300">
               New Arrivals

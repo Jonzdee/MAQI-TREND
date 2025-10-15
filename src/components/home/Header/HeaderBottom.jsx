@@ -60,23 +60,23 @@ const HeaderBottom = () => {
               >
                 <Link to={"category/imprimante"}>
                   <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
-                    Imprimante
+                    Jeans
                   </li>
                 </Link>
 
                 <Link to={"category/ancre"}>
                   <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
-                    ancre
+                    Jeans
                   </li>
                 </Link>
                 <Link to={"category/Ruban"}>
                   <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
-                    ruban
+                    Jeans
                   </li>
                 </Link>
                 <Link to={"category/Bac"}>
                   <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
-                    Bac de dechet
+                    Jeans
                   </li>
                 </Link>
               </motion.ul>
@@ -129,7 +129,7 @@ const HeaderBottom = () => {
                         <p className="text-sm">
                           Price:{" "}
                           <span className="text-primeColor font-semibold">
-                            ${item.price}
+                            ₦{item.price}
                           </span>
                         </p>
                       </div>
