@@ -85,17 +85,17 @@ const Banner = () => {
   const slides = [
     {
       imgSrc: bannerImgThree,
-      text: "Enhance Your Printing Experience",
+      text: "Enhance Your Dressing Experience",
       Subtext:
-        "Explore our premium printers and consumables for exceptional results.",
+        "Explore our premium clothes  for exceptional results.",
       buttonLink: "/offer",
       buttonText: "Shop Now",
     },
     {
       imgSrc: bannerImgTwo,
-      text: "Quality Printing Solutions",
+      text: "Quality Wears Solutions",
       Subtext:
-        "Discover our wide range of printers and consumables designed for professional printing needs.",
+        "Discover our wide range of wears .",
       buttonLink: "/shop",
       buttonText: "About Us",
     },
@@ -103,7 +103,7 @@ const Banner = () => {
       imgSrc: bannerImgThree,
       text: "Efficiency Redefined",
       Subtext:
-        "Maximize productivity with our advanced printers and high-quality consumables.",
+        "Maximize productivity with our advanced wears design and high-quality materials.",
       buttonLink: "/contact",
       buttonText: "Contact Us",
     },
