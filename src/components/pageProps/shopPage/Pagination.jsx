@@ -1,13 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactPaginate from "react-paginate";
 import Product from "../../home/Products/Product";
 import { useSelector } from "react-redux";
-import { paginationItems } from "../../../constants";
-
-const items = paginationItems;
+import { client } from "../../../sanityClient";
 
 function Items({ currentItems, selectedBrands, selectedCategories }) {
-  // Filter items based on selected brands and categories
   const filteredItems = currentItems.filter((item) => {
     const isBrandSelected =
       selectedBrands.length === 0 ||
@@ -15,7 +12,7 @@ function Items({ currentItems, selectedBrands, selectedCategories }) {
 
     const isCategorySelected =
       selectedCategories.length === 0 ||
-      selectedCategories.some((category) => category.title === item.cat);
+      selectedCategories.some((category) => category.title === item.category);
 
     return isBrandSelected && isCategorySelected;
   });
@@ -27,13 +24,12 @@ function Items({ currentItems, selectedBrands, selectedCategories }) {
           <Product
             _id={item._id}
             img={item.img}
-            productName={item.productName}
+            productName={item.name}
             price={item.price}
             color={item.color}
             badge={item.badge}
-            des={item.des}
+            des={item.description}
             pdf={item.pdf}
-            ficheTech={item.ficheTech}
           />
         </div>
       ))}
@@ -42,25 +38,40 @@ function Items({ currentItems, selectedBrands, selectedCategories }) {
 }
 
 const Pagination = ({ itemsPerPage }) => {
+  const [items, setItems] = useState([]);
   const [itemOffset, setItemOffset] = useState(0);
   const [itemStart, setItemStart] = useState(1);
 
-  const endOffset = itemOffset + itemsPerPage;
-  const currentItems = items.slice(itemOffset, endOffset);
   const selectedBrands = useSelector(
     (state) => state.orebiReducer.checkedBrands
   );
   const selectedCategories = useSelector(
     (state) => state.orebiReducer.checkedCategorys
   );
+
+  // Fetch products from Sanity
+  useEffect(() => {
+    const query = `*[_type == "product"]{
+      _id,
+      name,
+      price,
+      category,
+      brand,
+      description,
+      "img": image.asset->url
+    }`;
+
+    client.fetch(query).then((data) => setItems(data));
+  }, []);
+
+  const endOffset = itemOffset + itemsPerPage;
+  const currentItems = items.slice(itemOffset, endOffset);
   const pageCount = Math.ceil(items.length / itemsPerPage);
 
   const handlePageClick = (event) => {
     const newOffset = (event.selected * itemsPerPage) % items.length;
-    const newStart = newOffset + 1; // Adjust the start index
-
     setItemOffset(newOffset);
-    setItemStart(newStart);
+    setItemStart(newOffset + 1);
   };
 
   return (
@@ -70,8 +81,9 @@ const Pagination = ({ itemsPerPage }) => {
           currentItems={currentItems}
           selectedBrands={selectedBrands}
           selectedCategories={selectedCategories}
-        />{" "}
+        />
       </div>
+
       <div className="flex flex-col mdl:flex-row justify-center mdl:justify-between items-center">
         <ReactPaginate
           nextLabel=""
@@ -90,7 +102,6 @@ const Pagination = ({ itemsPerPage }) => {
           Products from {itemStart} to {Math.min(endOffset, items.length)} of{" "}
           {items.length}
         </p>
-        <button onClick={() => console.log(selectedBrands)}> test</button>
       </div>
     </div>
   );
