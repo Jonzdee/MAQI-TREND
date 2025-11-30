@@ -1,55 +1,101 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import Slider from "react-slick";
 import Heading from "../Products/Heading";
 import Product from "../Products/Product";
-import {
-  bestSellerOne,
-  bestSellerTwo,
-  bestSellerThree,
-  bestSellerFour,
-} from "../../../assets/images/index";
+import { client } from "../../../sanityClient";
+import SampleNextArrow from "../NewArrivals/SampleNextArrow";
+import SamplePrevArrow from "../NewArrivals/SamplePrevArrow";
 
 const BestSellers = () => {
-  return (
-    <div className="w-full pb-20">
-      <Heading heading="Our Bestsellers" />
-      <div className="w-full grid grid-cols-1 md:grid-cols-2 lgl:grid-cols-3 xl:grid-cols-4 gap-10">
-        <Product
-          _id="1011"
-          img={bestSellerOne}
-          productName="Jeans"
-          price="35.00"
-          color="Blank and White"
-          badge={true}
-          des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-        />
-        <Product
-          _id="1012"
-          img={bestSellerTwo}
-          productName="New Backpack"
-          price="180.00"
-          color="Gray"
-          badge={false}
-          des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-        />
-        <Product
-          _id="1013"
-          img={bestSellerThree}
-          productName="Jeans"
-          price="25.00"
-          color="Mixed"
-          badge={true}
-          des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-        />
-        <Product
-          _id="1014"
-          img={bestSellerFour}
-          productName="Jeans"
-          price="220.00"
-          color="Black"
-          badge={false}
-          des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-        />
+  const [bestSellers, setBestSellers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBestSellers = async () => {
+      try {
+        const query = `
+          *[_type == "product" && badge == "bestseller"]{
+            _id,
+            name,
+            price,
+            colors,
+            badge,
+            "img": image.asset->url,
+            description
+          }
+        `;
+        const data = await client.fetch(query);
+        setBestSellers(data);
+        setLoading(false);
+      } catch (err) {
+        console.error("Sanity Fetch Error:", err);
+        setLoading(false);
+      }
+    };
+
+    fetchBestSellers();
+  }, []);
+
+  const settings = {
+    infinite: bestSellers.length > 1,
+    speed: 500,
+    slidesToShow: Math.min(bestSellers.length, 4),
+    slidesToScroll: 1,
+    nextArrow: <SampleNextArrow />,
+    prevArrow: <SamplePrevArrow />,
+    responsive: [
+      {
+        breakpoint: 1025,
+        settings: { slidesToShow: Math.min(bestSellers.length, 3) },
+      },
+      {
+        breakpoint: 769,
+        settings: {
+          slidesToShow: Math.min(bestSellers.length, 2),
+          slidesToScroll: 2,
+        },
+      },
+      { breakpoint: 480, settings: { slidesToShow: 1, slidesToScroll: 1 } },
+    ],
+  };
+
+  if (loading) {
+    return (
+      <div className="w-full py-16 text-center text-gray-500">
+        Loading Bestsellers...
       </div>
+    );
+  }
+
+  if (!bestSellers || bestSellers.length === 0) {
+    return (
+      <div className="w-full py-16 text-center text-gray-500">
+        No Bestsellers Found.
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full py-16 px-4 md:px-8 lg:px-16 bg-gray-50">
+      <Heading heading="Our Bestsellers" />
+
+      <Slider {...settings} className="mt-8">
+        {bestSellers.map((item) => (
+          <div key={item._id} className="px-2">
+            <div className="overflow-hidden group">
+              <Product
+                _id={item._id}
+                img={item.img || "/placeholder.png"}
+                productName={item.name}
+                price={item.price}
+                color={item.colors?.join(", ") || "N/A"}
+                badge={item.badge === "bestseller"}
+                des={item.description}
+              />
+            </div>
+          </div>
+        ))}
+      </Slider>
     </div>
   );
 };

@@ -1,71 +1,77 @@
-import React, { useState } from "react";
-// import { FaPlus } from "react-icons/fa";
-import { ImPlus } from "react-icons/im";
+import React, { useState, useEffect } from "react";
 import NavTitle from "./NavTitle";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleCategory } from "../../../../redux/orebiSlice";
+import { client } from "../../../../sanityClient";
 
 const Category = () => {
-  const [showSubCatOne, setShowSubCatOne] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const checkedCategorys = useSelector(
     (state) => state.orebiReducer.checkedCategorys
   );
+
   const dispatch = useDispatch();
 
-  const category = [
-    {
-      _id: 9006,
-      title: "Gucci",
-    },
-    {
-      _id: 9007,
-      title: "MAQI",
-    },
-    {
-      _id: 9008,
-      title: "Nike",
-    },
-    {
-      _id: 9009,
-      title: "Prada",
-    },
-  ];
-
-  const handleToggleCategory = (category) => {
-    dispatch(toggleCategory(category));
+  const handleToggleCategory = (slug) => {
+    dispatch(toggleCategory(slug));
   };
+
+  // Fetch categories + product count
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const data = await client.fetch(`
+          *[_type == "category"]{
+            _id,
+            title,
+            slug,
+            
+            "productCount": count(*[_type == "product" && references(^._id)])
+          } | order(title asc)
+        `);
+        setCategories(data);
+      } catch (err) {
+        console.error("Error loading categories:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   return (
     <div className="w-full">
-      <NavTitle title="Shop by Category" icons={true} />
-      <div>
+      <NavTitle title="Shop by Category" icons={false} />
+
+      {loading ? (
+        <p className="text-sm text-gray-500">Loading categories...</p>
+      ) : (
         <ul className="flex flex-col gap-4 text-sm lg:text-base text-[#767676]">
-          {category.map((item) => (
+          {categories.map((item) => (
             <li
               key={item._id}
-              className="border-b-[1px] border-b-[#F0F0F0] pb-2 flex items-center gap-2 hover:text-primeColor hover:border-gray-400 duration-300"
+              className="border-b-[1px] border-b-[#F0F0F0] pb-2 flex items-center justify-between"
             >
-              <input
-                type="checkbox"
-                id={item._id}
-                checked={checkedCategorys.some((b) => b._id === item._id)}
-                onChange={() => handleToggleCategory(item)}
-              />
-              {item.title}
-              {item.icons && (
-                <span
-                  onClick={() => setShowSubCatOne(!showSubCatOne)}
-                  className="text-[10px] lg:text-xs cursor-pointer text-gray-400 hover:text-primeColor duration-300"
-                >
-                  <ImPlus />
-                </span>
-              )}
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id={item._id}
+                  checked={checkedCategorys.includes(item.slug.current)}
+                  onChange={() => handleToggleCategory(item.slug.current)}
+                />
+                <span>{item.title}</span>
+              </div>
+
+              <span className="text-xs bg-gray-100 px-2 py-1 rounded">
+                {item.productCount}
+              </span>
             </li>
           ))}
-          <li onClick={() => console.log(checkedCategorys)}>test</li>
         </ul>
-      </div>
+      )}
     </div>
   );
 };

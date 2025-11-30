@@ -62,7 +62,7 @@ const router = createBrowserRouter(
         <Route path="/journal" element={<Journal />}></Route>
         {/* ==================== Header Navlink End here ===================== */}
         <Route path="/category/:category" element={<Offer />}></Route>
-        <Route path="/product/:_id" element={<ProductDetails />}></Route>
+        <Route path="/product/:slug" element={<ProductDetails />}></Route>
         <Route path="/cart" element={<Cart />}></Route>
         <Route path="/paymentgateway" element={<Payment />}></Route>
       </Route>

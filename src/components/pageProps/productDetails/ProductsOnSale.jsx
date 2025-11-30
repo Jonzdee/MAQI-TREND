@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { client } from "../../sanityClient";
 import { onSaleQuery } from "../../lib/queries";
 

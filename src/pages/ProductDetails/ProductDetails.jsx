@@ -1,127 +1,194 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
-import ProductInfo from "../../components/pageProps/productDetails/ProductInfo";
-import { FaDownload } from "react-icons/fa";
+import { useParams } from "react-router-dom";
+import { client } from "../../sanityClient";
+import imageUrlBuilder from "@sanity/image-url";
 
-const tabs = [
-  {
-    id: "Fiche Technique",
-    label: "Fiche Technique",
-  },
-  {
-    id: "Description",
-    label: "Description",
-    content:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis.",
-  },
-  {
-    id: "Video",
-    label: "Video",
-    content: (
-      <iframe
-        width="560"
-        height="315"
-        src="https://www.youtube.com/embed/watch?v=6e0yIRDVPlA&list=RD6e0yIRDVPlA&start_radio=1"
-        title="YouTube Video"
-        frameBorder="0"
-        allowFullScreen
-      ></iframe>
-    ),
-  },
-  // Add more tabs as needed
-];
+const builder = imageUrlBuilder(client);
+const urlFor = (src) => builder.image(src);
 
 const ProductDetails = () => {
-  const location = useLocation();
-  const [prevLocation, setPrevLocation] = useState("");
-  const [productInfo, setProductInfo] = useState([]);
-  const [activeTab, setActiveTab] = useState(tabs[0].id);
-
-  const handleTabClick = (tabId) => {
-    setActiveTab(tabId);
-  };
+  const { slug } = useParams();
+  const [product, setProduct] = useState(undefined);
+  const [activeImage, setActiveImage] = useState(null);
+  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
+  const [activeTab, setActiveTab] = useState("description");
 
   useEffect(() => {
-    setProductInfo(location.state.item);
-    setPrevLocation(location.pathname);
-  }, [location, productInfo.ficheTech]);
+    const fetchProduct = async () => {
+      const query = `
+      *[_type == "product" && slug.current == $slug][0]{
+        _id,
+        name,
+        slug,
+        price,
+        description,
+        image,
+        images,
+        sizes,
+        colors,
+        material,
+        fit,
+        stock,
+        sku,
+        badge,
+    category->{
+      title,
+      slug
+    },
+ 
+     brand->{title}
+      }
+      `;
+      const data = await client.fetch(query, { slug });
+
+      setProduct(data);
+      setActiveImage(urlFor(data?.image).url());
+    };
+
+    fetchProduct();
+  }, [slug]);
+
+  if (product === undefined) {
+    return <div className="p-10 text-center text-xl">Loading Product...</div>;
+  }
+
+  if (product === null) {
+    return <div className="p-10 text-center text-xl">Product not found.</div>;
+  }
+
+ 
+  const allImages = [product.image, ...(product.images || [])];
 
   return (
-    <div className="w-full mx-auto border-b-[1px] border-b-gray-300">
-      <div className="max-w-container mx-auto px-4">
-        <div className="xl:-mt-10 -mt-7">
-          <Breadcrumbs title="" prevLocation={prevLocation} />
-        </div>
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-4 h-full -mt-5 xl:-mt-8 pb-10 bg-gray-100 p-4">
-          <div className="h-full xl:col-span-2">
-            <img
-              className="w-full h-full "
-              src={productInfo.img}
-              alt={productInfo.img}
-            />
-          </div>
-          <div className="h-full w-full md:col-span-2 xl:col-span-4 xl:px-4 flex flex-col gap-6 justify-center">
-            <ProductInfo productInfo={productInfo} />
-          </div>
-        </div>
+    <div className="max-w-6xl mx-auto p-6 mt-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+        {/* LEFT IMAGE AREA */}
         <div>
-          <div className=" space-x-4  pt-4">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                className={`${
-                  activeTab === tab.id
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-200 text-gray-800"
-                } py-2 px-4  focus:outline-none`}
-                onClick={() => handleTabClick(tab.id)}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-          <div className="my-4">
-            {tabs.map((tab) => (
-              <div
-                key={tab.id}
-                className={activeTab === tab.id ? "" : "hidden"}
-              >
-                {tab.id === "Fiche Technique" && productInfo.ficheTech ? (
-                  <div>
-                    <table className="table-auto w-full">
-                      <tbody>
-                        {productInfo.ficheTech.map((row) => (
-                          <tr key={row.label} className="bg-gray-100">
-                            <td className="border px-4 py-2 font-semibold">
-                              {row.label}
-                            </td>
-                            <td className="border px-4 py-2">{row.value}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                    <div className="my-4 flex justify-end">
-                      <button className="inline-flex items-center px-4 py-2 border border-gray-300 bg-blue-500 hover:bg-blue-600 text-white font-bodyFont">
-                        <FaDownload className="h-5 w-5 mr-2 text-white" />
-                        <a
-                          href={productInfo.pdf}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-white"
-                        >
-                          Download PDF
-                        </a>{" "}
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <p>{tab.content}</p>
-                )}
-              </div>
-            ))}
+          {/* MAIN IMAGE  IS HERE BRO*/}
+          <img
+            src={activeImage}
+            className="w-full h-[480px] object-cover rounded-xl border"
+          />
+
+          {/* THUMBNAILS FOR THE SMALL PICTURES IS HERE BRO*/}
+          <div className="flex flex-row gap-4 mt-4 overflow-x-auto">
+            {allImages.map((img, index) => {
+              const imgUrl = urlFor(img).url();
+              return (
+                <img
+                  key={index}
+                  src={imgUrl}
+                  className={`w-20 h-20 object-cover rounded-lg border cursor-pointer ${
+                    activeImage === imgUrl ? "border-black" : "border-gray-300"
+                  }`}
+                  onClick={() => setActiveImage(imgUrl)}
+                />
+              );
+            })}
           </div>
         </div>
+
+        {/* RIGHT PRODUCT INFO  IS HERE BRO*/}
+        <div className="flex flex-col gap-6">
+          {product.badge && (
+            <span className="inline-block bg-black text-white px-3 py-1 text-sm rounded-full w-max">
+              {product.badge.toUpperCase()}
+            </span>
+          )}
+
+          <h1 className="text-3xl font-bold">{product.name}</h1>
+
+          <p className="text-2xl font-semibold text-blue-600">
+            ₦{product.price.toLocaleString()}
+          </p>
+
+          {/* SIZES OF CLOTHES IS HERE BRO*/}
+          {product.sizes?.length > 0 && (
+            <div>
+              <p className="font-semibold mb-2">Available Sizes:</p>
+              <div className="flex gap-3">
+                {product.sizes.map((size) => (
+                  <button
+                    key={size}
+                    onClick={() => setSelectedSize(size)}
+                    className={`px-4 py-2 border rounded-md ${
+                      selectedSize === size ? "bg-black text-white" : "bg-white"
+                    }`}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* COLORS ALSO HERE BRO */}
+          {product.colors?.length > 0 && (
+            <div>
+              <p className="font-semibold mb-2">Colors:</p>
+              <div className="flex gap-3">
+                {product.colors.map((color) => (
+                  <button
+                    key={color}
+                    onClick={() => setSelectedColor(color)}
+                    className={`px-4 py-2 border rounded-md ${
+                      selectedColor === color
+                        ? "bg-black text-white"
+                        : "bg-white"
+                    }`}
+                  >
+                    {color}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* MATERIAL IS HERE BRO */}
+          {product.material && (
+            <p className="text-gray-700">
+              <span className="font-semibold">Material:</span>{" "}
+              {product.material}
+            </p>
+          )}
+
+          {/* FIT IS HERE BRO */}
+          {product.fit && (
+            <p className="text-gray-700">
+              <span className="font-semibold">Fit:</span> {product.fit}
+            </p>
+          )}
+
+          {/* STOCK FOR THE NUMBERS OF PRODUCT IS HERE BRO */}
+          <p className="text-gray-900 font-semibold">
+            Stock: {product.stock > 0 ? product.stock : "Out of Stock"}
+          </p>
+
+          <button className="w-full bg-black text-white py-3 rounded-lg text-lg hover:bg-gray-800">
+            Add to Cart
+          </button>
+        </div>
+      </div>
+
+      {/* DESCRIPTION TAB IS HERE BRO*/}
+      <div className="mt-12">
+        <div className="flex gap-6 border-b pb-2">
+          <button
+            className={`pb-2 ${
+              activeTab === "description" ? "border-b-2 border-black" : ""
+            }`}
+            onClick={() => setActiveTab("description")}
+          >
+            Description
+          </button>
+        </div>
+
+        {activeTab === "description" && (
+          <div className="mt-6 text-gray-700 leading-relaxed">
+            {product.description}
+          </div>
+        )}
       </div>
     </div>
   );

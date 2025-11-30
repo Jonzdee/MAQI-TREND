@@ -6,10 +6,12 @@ const initialState = {
   products: [],
   checkedBrands: [],
   checkedCategorys: [],
+  checkedColors: [],
+  selectedPrice: null,
 };
 
 export const orebiSlice = createSlice({
-  name: "orebi",
+  name: "MAQI_TREND",
   initialState,
   reducers: {
     addToCart: (state, action) => {
@@ -56,13 +58,11 @@ export const orebiSlice = createSlice({
       // Dispatch a success toast
     },
 
-    toggleBrand: (state, action) => {
+   toggleBrand: (state, action) => {
       const brand = action.payload;
-      const isBrandChecked = state.checkedBrands.some(
-        (b) => b._id === brand._id
-      );
-
-      if (isBrandChecked) {
+      if (!brand) return;
+      const exists = state.checkedBrands.find((b) => b._id === brand._id);
+      if (exists) {
         state.checkedBrands = state.checkedBrands.filter(
           (b) => b._id !== brand._id
         );
@@ -70,19 +70,35 @@ export const orebiSlice = createSlice({
         state.checkedBrands.push(brand);
       }
     },
+    clearBrands: (state) => {
+      state.checkedBrands = [];
+    },
+  
+
+    toggleColor: (state, action) => {
+      const color = action.payload;
+      const isColorChecked = state.checkedColors.includes(color);
+
+      if (isColorChecked) {
+        state.checkedColors = state.checkedColors.filter((c) => c !== color);
+      } else {
+        state.checkedColors.push(color);
+      }
+    },
+    togglePrice: (state, action) => {
+      const range = action.payload; // { min, max }
+      state.selectedPrice = range;
+    },
 
     toggleCategory: (state, action) => {
-      const category = action.payload;
-      const isCategoryChecked = state.checkedCategorys.some(
-        (b) => b._id === category._id
-      );
+      const slug = action.payload;
 
-      if (isCategoryChecked) {
+      if (state.checkedCategorys.includes(slug)) {
         state.checkedCategorys = state.checkedCategorys.filter(
-          (b) => b._id !== category._id
+          (s) => s !== slug
         );
       } else {
-        state.checkedCategorys.push(category);
+        state.checkedCategorys.push(slug);
       }
     },
   },
@@ -95,6 +111,9 @@ export const {
   deleteItem,
   resetCart,
   toggleBrand,
+  togglePrice,
+  toggleColor,
+  clearBrands ,
   toggleCategory,
 } = orebiSlice.actions;
 export default orebiSlice.reducer;
