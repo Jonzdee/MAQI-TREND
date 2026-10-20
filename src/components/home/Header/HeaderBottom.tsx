@@ -204,6 +204,8 @@ const HeaderBottom = () => {
   const [show, setShow] = useState(false);
   const [showUser, setShowUser] = useState(false);
   const [categories, setCategories] = useState<{ _id: string; title: string; slug: string }[]>([]);
+  const [catLoading, setCatLoading] = useState(true);
+  const [catError, setCatError] = useState(false);
   const navigate = useNavigate();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -213,15 +215,22 @@ const HeaderBottom = () => {
   // Fetch categories from Sanity
   useEffect(() => {
     const fetchCategories = async () => {
-      const query = `*[_type == "category"] | order(title asc){
+      try {
+        const query = `*[_type == "category"] | order(title asc){
         _id,
         title,
         "slug": slug.current
       }`;
-      const data = await client.fetch<
-        { _id: string; title: string; slug: string }[]
-      >(query);
-      setCategories(data);
+        const data = await client.fetch<
+          { _id: string; title: string; slug: string }[]
+        >(query);
+        setCategories(data);
+      } catch (err) {
+        console.error("Error loading categories:", err);
+        setCatError(true);
+      } finally {
+        setCatLoading(false);
+      }
     };
     fetchCategories();
   }, []);
@@ -272,6 +281,17 @@ const HeaderBottom = () => {
                 transition={{ duration: 0.5 }}
                 className="absolute top-14 z-50 bg-primeColor w-52 text-[#767676] h-auto p-2 shadow-lg"
               >
+                {catLoading && (
+                  <li className="text-gray-400 px-4 py-2">Loading…</li>
+                )}
+                {!catLoading && catError && (
+                  <li className="text-gray-400 px-4 py-2">
+                    Couldn't load categories
+                  </li>
+                )}
+                {!catLoading && !catError && categories.length === 0 && (
+                  <li className="text-gray-400 px-4 py-2">No categories yet</li>
+                )}
                 {categories.map((cat) => (
                   <Link key={cat._id} to={`/category/${cat.slug}`}>
                     <li className="text-gray-400 px-4 py-2 hover:text-white hover:bg-orange-500 rounded cursor-pointer">

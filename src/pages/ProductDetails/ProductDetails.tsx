@@ -207,6 +207,7 @@ const ProductDetails = () => {
   const [product, setProduct] = useState<SanityProduct | null | undefined>(
     undefined
   );
+  const [error, setError] = useState(false);
   const [activeImage, setActiveImage] = useState<string>("");
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
@@ -246,8 +247,19 @@ const ProductDetails = () => {
       }
     };
 
-    fetchProduct();
+    fetchProduct().catch((err) => {
+      console.error("Error loading product:", err);
+      setError(true);
+    });
   }, [slug]);
+
+  if (error) {
+    return (
+      <div className="p-10 text-center text-xl text-red-500">
+        Couldn't load this product. Please try again later.
+      </div>
+    );
+  }
 
   if (product === undefined) {
     return <div className="p-10 text-center text-xl">Loading Product...</div>;

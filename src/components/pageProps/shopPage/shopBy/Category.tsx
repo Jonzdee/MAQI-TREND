@@ -93,6 +93,7 @@ interface CategoryProps {
 const Category = ({ icons = false }: CategoryProps) => {
   const [categories, setCategories] = useState<CategoryRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   const checkedCategorys = useAppSelector(
     (state) => state.orebiReducer.checkedCategorys
@@ -120,6 +121,7 @@ const Category = ({ icons = false }: CategoryProps) => {
         setCategories(data);
       } catch (err) {
         console.error("Error loading categories:", err);
+        setError(true);
       } finally {
         setLoading(false);
       }
@@ -134,6 +136,10 @@ const Category = ({ icons = false }: CategoryProps) => {
 
       {loading ? (
         <p className="text-sm text-gray-500">Loading categories...</p>
+      ) : error ? (
+        <p className="text-sm text-red-500">Couldn't load categories.</p>
+      ) : categories.length === 0 ? (
+        <p className="text-sm text-gray-500">No categories yet.</p>
       ) : (
         <ul className="flex flex-col gap-4 text-sm lg:text-base text-[#767676]">
           {categories.map((item) => (

@@ -257,6 +257,8 @@ interface PaginationProps {
 
 const Pagination = ({ itemsPerPage }: PaginationProps) => {
   const [items, setItems] = useState<PaginationProduct[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [itemOffset, setItemOffset] = useState(0);
   const [itemStart, setItemStart] = useState(1);
   const [gridViewActive, setGridViewActive] = useState(true);
@@ -277,7 +279,12 @@ const Pagination = ({ itemsPerPage }: PaginationProps) => {
   }`;
     client
       .fetch<PaginationProduct[]>(query)
-      .then((data) => setItems(data));
+      .then((data) => setItems(data))
+      .catch((err) => {
+        console.error("Error loading products:", err);
+        setError(true);
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   const endOffset = itemOffset + currentItemsPerPage;
@@ -306,15 +313,25 @@ const Pagination = ({ itemsPerPage }: PaginationProps) => {
       />
 
       {/* Products */}
-      <div
-        className={
-          gridViewActive
-            ? "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 mdl:gap-4 lg:gap-10"
-            : "flex flex-col gap-6"
-        }
-      >
-        <Items currentItems={currentItems} gridViewActive={gridViewActive} />
-      </div>
+      {loading ? (
+        <p className="py-16 text-center text-gray-500">Loading products…</p>
+      ) : error ? (
+        <p className="py-16 text-center text-red-500">
+          Couldn't load products. Please try again later.
+        </p>
+      ) : items.length === 0 ? (
+        <p className="py-16 text-center text-gray-500">No products found.</p>
+      ) : (
+        <div
+          className={
+            gridViewActive
+              ? "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 mdl:gap-4 lg:gap-10"
+              : "flex flex-col gap-6"
+          }
+        >
+          <Items currentItems={currentItems} gridViewActive={gridViewActive} />
+        </div>
+      )}
 
       {/* Pagination to next or back products  */}
       <div className="flex flex-col mdl:flex-row justify-center mdl:justify-between items-center gap-6 py-10">

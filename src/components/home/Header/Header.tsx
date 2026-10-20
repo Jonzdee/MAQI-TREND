@@ -260,6 +260,8 @@ const Header = () => {
   const [sidenav, setSidenav] = useState(false);
   const [category, setCategory] = useState(false);
   const [categories, setCategories] = useState<(CategoryRow & { slug: string; icon?: string })[]>([]);
+  const [catLoading, setCatLoading] = useState(true);
+  const [catError, setCatError] = useState(false);
   const location = useLocation();
 
   // Handle responsive menu
@@ -304,6 +306,9 @@ const Header = () => {
         setCategories(data);
       } catch (err) {
         console.error("Sanity fetch error:", err);
+        setCatError(true);
+      } finally {
+        setCatLoading(false);
       }
     };
     fetchCategories();
@@ -455,6 +460,17 @@ const Header = () => {
                       transition={{ duration: 0.3 }}
                       className="flex flex-col gap-2"
                     >
+                      {catLoading && (
+                        <li className="text-gray-400">Loading…</li>
+                      )}
+                      {!catLoading && catError && (
+                        <li className="text-gray-400">
+                          Couldn't load categories
+                        </li>
+                      )}
+                      {!catLoading && !catError && categories.length === 0 && (
+                        <li className="text-gray-400">No categories yet</li>
+                      )}
                       {categories.map((cat) => (
                         <li key={cat._id} className="hover:text-orange-500">
                           <Link

@@ -115,6 +115,8 @@ import type { Brand as BrandType } from "../../../../types";
 const Brand = () => {
   const [showBrands, setShowBrands] = useState(true);
   const [brands, setBrands] = useState<BrandType[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const checkedBrands = useAppSelector(
     (state) => state.orebiReducer.checkedBrands
   );
@@ -138,6 +140,9 @@ const Brand = () => {
         setBrands(data);
       } catch (err) {
         console.error("Error fetching brands:", err);
+        setError(true);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -162,8 +167,12 @@ const Brand = () => {
           transition={{ duration: 0.5 }}
           className="mt-4"
         >
-          {brands.length === 0 ? (
+          {loading ? (
             <p className="text-sm text-gray-500">Loading brands...</p>
+          ) : error ? (
+            <p className="text-sm text-red-500">Couldn't load brands.</p>
+          ) : brands.length === 0 ? (
+            <p className="text-sm text-gray-500">No brands yet.</p>
           ) : (
             <ul className="flex flex-col gap-3 text-sm lg:text-base text-gray-700">
               {/* Default All Brands Option */}
