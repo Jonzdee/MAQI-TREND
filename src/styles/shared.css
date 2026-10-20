@@ -1,0 +1,32 @@
+/* ==========================================================================
+   SHARED / GENERAL STYLES
+   Anything used by more than one component lives here. Colors/spacing tokens
+   are defined in src/index.css (:root). Imported once from src/index.css.
+   ========================================================================== */
+
+/* --- Utility-ish helpers kept from the original index.css --------------- */
+.hoverEffect {
+  transition-duration: 300ms;
+  cursor: pointer;
+}
+
+.headerSedenavLi {
+  cursor: pointer;
+  color: #d1d5db; /* gray-300 */
+}
+.headerSedenavLi:hover {
+  color: #ffffff;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* --- Generic container ------------------------------------------------- */
+.mq-container {
+  margin-inline: auto;
+  max-width: var(--container-container);
+  padding-inline: 1rem;
+}

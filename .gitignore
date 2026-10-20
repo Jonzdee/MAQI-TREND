@@ -11,6 +11,11 @@
 # production
 # /build
 
+# build output + local logs
+/dist
+/logs
+*.tsbuildinfo
+
 # misc
 .DS_Store
 .env.local

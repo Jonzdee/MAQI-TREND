@@ -1,19 +1,71 @@
+/* --------------------------------------------------------------------------
+   MAQI-TREND — global stylesheet (Tailwind v4, CSS-first).
+   Mirrors the ~/new-landing setup so styling is easy: edit tokens in the
+   @theme / :root blocks below, repeated patterns in styles/shared.css,
+   and per-component rules in their own src/styles/*.css file.
+   -------------------------------------------------------------------------- */
+
+/* Tailwind v4 — one import replaces the old @tailwind base/components/utilities */
+@import "tailwindcss";
+
+/* Fonts (Google) — same families the app already used */
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Shared/repeated component patterns — single source of truth */
+@import "./styles/shared.css";
 
-@layer components {
-  .hoverEffect {
-    @apply duration-300 cursor-pointer;
-  }
-  .headerSedenavLi {
-    @apply hover:underline underline-offset-2 cursor-pointer text-gray-300 hover:text-white;
-  }
+/* --------------------------------------------------------------------------
+   Theme tokens (v4 CSS-first). Colors / fonts / screens live HERE.
+   `@theme` also generates Tailwind utilities (e.g. text-prime, font-bodyFont,
+   max-w-container) from these values.
+   -------------------------------------------------------------------------- */
+@theme {
+  /* Fonts (names kept identical to the old tailwind.config.js) */
+  --font-bodyFont: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-titleFont: "Poppins", ui-sans-serif, system-ui, sans-serif;
+
+  /* Brand colors (names kept identical to the old tailwind.config.js) */
+  --color-primeColor: #262626;
+  --color-lightText: #6d6d6d;
+
+  /* Layout */
+  --container-container: 1440px;
+
+  /* Custom screens (kept identical to the old tailwind.config.js) */
+  --breakpoint-xs: 320px;
+  --breakpoint-sml: 500px;
+  --breakpoint-mdl: 768px;
+  --breakpoint-lgl: 1024px;
+
+  /* Shadows */
+  --shadow-testShadow: 0px 0px 54px -13px rgba(0, 0, 0, 0.7);
 }
 
-/* ============= NavLink active Start here ============== */
+/* --------------------------------------------------------------------------
+   General tokens for styles/shared.css and component stylesheets.
+   Change a value once here to restyle the whole app.
+   -------------------------------------------------------------------------- */
+:root {
+  --color-bg: #ffffff;
+  --color-heading: #262626;
+  --color-body: #6d6d6d;
+  --color-accent: #262626;
+  --color-hairline: rgba(38, 38, 38, 0.1);
+  --radius-sm: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+body {
+  margin: 0;
+  font-family: var(--font-bodyFont);
+  color: var(--color-heading);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* NavLink active state (kept from the original index.css) */
 nav .active li {
   color: black;
   font-weight: 600;
@@ -28,7 +80,13 @@ nav .active li {
   }
 }
 
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
-/* ============= NavLink active End here ================ */
