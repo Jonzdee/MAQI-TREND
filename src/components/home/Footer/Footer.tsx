@@ -189,7 +189,7 @@ const Footer = () => {
     }
   };
   return (
-    <div className="w-full bg-[#F5F5F3] py-20">
+    <div className="w-full bg-[#F5F5F3] py-16">
       <div className="max-w-container mx-auto grid grid-cols-1 md:grid-cols-2  xl:grid-cols-6 px-4 gap-10">
         <div className="col-span-2">
           <FooterListTitle title=" More about MAQI Shop" />
