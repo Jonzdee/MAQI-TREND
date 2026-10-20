@@ -4,7 +4,7 @@ import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 
 const Payment = () => {
   return (
-    <div className="max-w-container mx-auto px-4">
+    <div className="mq-container-pad">
       <Breadcrumbs title="Payment gateway" />
       <div className="pb-10">
         <p>Payment gateway only applicable for Production build.</p>

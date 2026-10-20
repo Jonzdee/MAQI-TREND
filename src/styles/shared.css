@@ -30,3 +30,142 @@
   max-width: var(--container-container);
   padding-inline: 1rem;
 }
+
+/* ==========================================================================
+   SEMANTIC COMPONENT CLASSES
+   Repeated Tailwind clusters promoted to named classes so JSX stays short and
+   a single edit restyles every occurrence. Values mirror the original inline
+   utilities exactly. Overridable by utilities defined later in the cascade.
+   ========================================================================== */
+@layer components {
+  /* Auth (SignIn / SignUp) */
+  .mq-auth-brand-panel {
+    width: 450px;
+    height: 100%;
+    background: var(--color-primeColor);
+    padding-inline: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    justify-content: center;
+  }
+  .mq-auth-feature {
+    width: 300px;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  .mq-auth-feature-title {
+    color: #fff;
+    font-weight: 600;
+    font-family: var(--font-titleFont);
+  }
+  .mq-auth-footer-link {
+    font-size: 0.875rem;
+    font-family: var(--font-titleFont);
+    font-weight: 600;
+    color: #d1d5db;
+    cursor: pointer;
+    transition-duration: 300ms;
+  }
+  .mq-auth-footer-link:hover {
+    color: #fff;
+  }
+
+  /* Auth form field: label + input + error message */
+  .mq-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+  .mq-field-label {
+    font-family: var(--font-titleFont);
+    font-size: 1rem;
+    font-weight: 600;
+    color: #4b5563;
+  }
+  .mq-field-input {
+    width: 100%;
+    height: 2rem;
+    padding-inline: 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 0.375rem;
+    border: 1px solid #9ca3af;
+    outline: none;
+  }
+  .mq-field-input::placeholder {
+    font-size: 0.875rem;
+    letter-spacing: 0.025em;
+    font-weight: 400;
+  }
+  .mq-field-error {
+    font-size: 0.875rem;
+    color: #ef4444;
+    font-family: var(--font-titleFont);
+    font-weight: 600;
+    padding-inline: 1rem;
+  }
+  .mq-field-error-mark {
+    font-weight: 700;
+    font-style: italic;
+    margin-right: 0.25rem;
+  }
+
+  /* Primary action button (auth + subscribe) */
+  .mq-btn-primary {
+    width: 100%;
+    height: 2.5rem;
+    background: var(--color-primeColor);
+    color: #e5e7eb;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 0.375rem;
+    transition-duration: 300ms;
+  }
+  .mq-btn-primary:hover {
+    background: #000;
+    color: #fff;
+  }
+
+  /* Footer */
+  .mq-footer-link {
+    font-family: var(--font-titleFont);
+    font-size: 1rem;
+    color: var(--color-lightText);
+    cursor: pointer;
+    transition-duration: 300ms;
+  }
+  .mq-footer-link:hover {
+    color: #000;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: #6b7280;
+    text-underline-offset: 2px;
+  }
+  .mq-footer-social {
+    width: 1.75rem;
+    height: 1.75rem;
+    background: var(--color-primeColor);
+    color: #f3f4f6;
+    font-size: 1.125rem;
+    border-radius: 9999px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition-duration: 300ms;
+  }
+  .mq-footer-social:hover {
+    background: #000;
+    color: #fff;
+  }
+
+  /* Page container (max-w-container mx-auto px-4) */
+  .mq-container-pad {
+    max-width: var(--container-container);
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+}
+

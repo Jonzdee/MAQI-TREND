@@ -462,7 +462,7 @@ const Journal = () => {
   const visible = filtered.slice((page - 1) * perPage, page * perPage);
 
   return (
-    <div className="max-w-container mx-auto px-4">
+    <div className="mq-container-pad">
       <Breadcrumbs title="Journals" prevLocation={prevLocation} />
       <div className="pb-6">
         <h1 className="max-w-[800px] text-base text-lightText mb-2">

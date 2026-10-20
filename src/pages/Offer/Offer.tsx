@@ -53,7 +53,7 @@ const Offer = () => {
     //   </div>
     // </div>
 
-    <div className="max-w-container mx-auto px-4">
+    <div className="mq-container-pad">
       <Breadcrumbs title={category ?? "Offer"} prevLocation={prevLocation} />
       {/* ================= Products Start here =================== */}
       <div className="w-full h-full flex pb-20 gap-10">

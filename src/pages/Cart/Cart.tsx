@@ -170,7 +170,7 @@ const Cart = () => {
     }
   }, [totalAmt]);
   return (
-    <div className="max-w-container mx-auto px-4">
+    <div className="mq-container-pad">
       <Breadcrumbs title="Cart" />
       {products.length > 0 ? (
         <div className="pb-20">
